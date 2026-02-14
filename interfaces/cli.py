@@ -19,25 +19,24 @@ args = parser.parse_args()
 
 if args.Off:
 	print("Off")
-	controller.set_color = (COLORS["off"])
-	controller.power_all()
+	controller.power_off()
 
 if args.Red:
 	print("Red")
-	controller.set_color(COLORS["red"])
-	controller.power_all() 
+	controller.fill(COLORS["red"])
+	controller.show_pixels() 
 
 if args.Green:
 	print("Green")
-	controller.set_color(COLORS["green"])
-	controller.power_all() 
+	controller.fill(COLORS["green"])
+	controller.show_pixels() 
 
 if args.Blue:
 	print("Blue")
-	controller.set_color(COLORS["blue"])
-	controller.power_all() 
+	controller.fill(COLORS["blue"])
+	controller.show_pixels() 
 
 if args.White:
 	print("White")
-	controller.set_color(COLORS["white"])
-	controller.power_all() 
+	controller.fill(COLORS["white"])
+	controller.show_pixels() 

@@ -7,17 +7,18 @@ from . import config
 
 pixels = neopixel.NeoPixel(config.PIN, config.LED_COUNT, brightness=config.DEFAULT_BRIGHTNESS)
 
-def set_color(color):
+def fill(color):
         pixels.fill(color)
+
+def set_pixel(index, color):
+	pixels[index].fill(color)
 
 def set_brightness(val):
         pixels.brightness = val
-
 
 def power_off():
 	pixels.fill((0, 0, 0))
 	pixels.show()
 
-
-def power_all():
+def show_pixels():
 	pixels.show()
