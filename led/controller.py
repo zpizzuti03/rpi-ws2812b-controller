@@ -10,7 +10,7 @@ Monitors and controls runtime state (i.e. current color, brightness, etc.)
 import board 
 import neopixel 
 from . import config
-from .colors import is_rgb_tuple
+from .colors import COLORS, is_rgb_tuple
 
 pixels = neopixel.NeoPixel(config.PIN, config.LED_COUNT, brightness=config.DEFAULT_BRIGHTNESS)
 
@@ -56,7 +56,7 @@ def power_off():
 	Turns off the all of the lights on the LED strip
 
 	"""
-	pixels.fill((0, 0, 0))
+	pixels.fill(COLORS["off"])
 	pixels.show()
 
 def show_pixels():

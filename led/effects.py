@@ -6,9 +6,9 @@ Animation layer for the LED controller system.
 This module defines time-based and pattern-based lighting effects
 that operate on the LED strip through the controller module.
 """
-from .controller import fill_color, set_pixel_color, set_brightness, show_pixels
+from .controller import fill_color, power_off, set_pixel_color, set_brightness, show_pixels
 from .colors import COLORS
-import time
+from .timer import RepeatingTimer
 
 def show_fill(color):
 	"""
@@ -20,22 +20,26 @@ def show_fill(color):
 	fill_color(color)
 	show_pixels()
 
+def blink_color(color, interval):
+	"""
+	Takes a color and a a interval to blink a specfic color over an interval of time
 
-# blink_color allows for lights of a specified color to flash off and then back on again
-# TODO: Seperate the time loop from the blink logic
-def blink_color(interval):
-	on = False
-	next_update = time.monotonic()
-	
-	while True:
-		next_update += interval
+	This function takes the color passed and uses a closure to encapsulate it into an
+	action that can be passed to the repeating timer's action function. The timer updates
+	and performs the blink and then this function alternates it's on state.
 
-		fill_color(COLORS["green"] if not on else COLORS["off"])
-		show_pixels()
+	Keyword arguments:
+	color -- the color to flash when the LED strip is on
+	interval -- the time in seconds which the light switches from on to off and vice-versa
+	"""
+	on = True
+
+	def blink():
+		nonlocal on
+		show_fill(color if not on else COLORS["off"])
 		on = not on
 
-		sleep_time = next_update - time.monotonic()
-		if sleep_time > 0:
-			time.sleep(sleep_time)
+	timer = RepeatingTimer(interval, blink)
 
-# TODO: blink_interval calls the blink_color function on a interval determined by a user for a user specified color.
+	while True:
+		timer.update()
