@@ -9,10 +9,10 @@ Monitors and controls runtime state (i.e. current color, brightness, etc.)
 """
 import board 
 import neopixel 
-from . import config
+from .config import PIN, LED_COUNT, DEFAULT_BRIGHTNESS
 from .colors import COLORS, is_rgb_tuple
 
-pixels = neopixel.NeoPixel(config.PIN, config.LED_COUNT, brightness=config.DEFAULT_BRIGHTNESS)
+pixels = neopixel.NeoPixel(PIN, LED_COUNT, brightness=DEFAULT_BRIGHTNESS)
 
 def fill_color(color):
 	"""
@@ -24,16 +24,28 @@ def fill_color(color):
 	if is_rgb_tuple(color):
 		pixels.fill(color)
 
-def set_pixel_color(index, color):
+def fill_single(color, index):
 	"""
 	Fills a single LED with a specified color by index
 
 	Keyword arguments:
-	index -- the index of the pixel on the LED strip (0-LED_COUNT)
 	color -- the color to fill the pixel with
+	index -- the index of the pixel on the LED strip (0-LED_COUNT)
 	"""
 	if is_rgb_tuple(color):
-		pixels[index].fill(color)
+		pixels[index] = color
+
+def fill_range(color, start=0, end=LED_COUNT):
+	"""
+	Fills LEDs in a range from a start value to end value
+
+	Keyword arguments:
+	color -- the color to fill the pixel with
+	start -- the starting pixel in range to fill
+	end -- the ending pixel to fill in this range
+	"""
+	for i in range(start, end):
+		fill_single(color, i)
 
 def set_brightness(val):
 	"""
@@ -51,16 +63,15 @@ def set_brightness(val):
 	else:
 		print("Please enter a brightness value between 0 and 1.")
 
+def show_pixels():
+        """
+        Displays all updated information to the pixels on the board
+        """
+        pixels.show()
+
 def power_off():
 	"""
 	Turns off the all of the lights on the LED strip
-
 	"""
-	pixels.fill(COLORS["off"])
-	pixels.show()
-
-def show_pixels():
-	"""
-	Displays all updated information to the pixels on the board
-	"""
-	pixels.show()
+	fill_color(COLORS["off"])
+	show_pixels()
