@@ -31,44 +31,59 @@ def show_fill(color, sel=PixelRange()):
 	show_pixels()
 
 
-def blink_color(color, interval=1, duration=10, sel=PixelRange()):
-        """
-        Takes a color and a a interval to blink a specfic color over an interval of time
-
-        This function takes the color passed and uses a closure to encapsulate it into an
-        action that can be passed to the repeating timer's action function. The timer updates
-        and performs the blink and then this function alternates it's on state.
-
-        Keyword arguments:
-        color -- An RGB int tuple defining the color to blink on the LED strip
-	duration -- A time in seconds which the blinking affect will run for
-        interval -- the time in seconds which the light switches from on to off and vice-versa
-        sel -- A container with information on which pixels to display
+def blink_color(color, interval=None, duration=None, sel=PixelRange()):
 	"""
-        on = True
+	Takes a color and a a interval to blink a specfic color over an interval of time
 
-        def blink():
-                nonlocal on
-                show_fill(color if not on else COLORS["off"], sel)
-                on = not on
+	This function takes the color passed and uses a closure to encapsulate it into an
+	action that can be passed to the repeating timer's action function. The timer updates
+	and performs the blink and then this function alternates it's on state.
 
-        timer = RepeatingTimer(interval, blink)
+	Keyword arguments:
+	color -- An RGB int tuple defining the color to blink on the LED strip
+	duration -- A time in seconds which the blinking affect will run for
+	interval -- the time in seconds which the light switches from on to off and vice-versa
+	sel -- A container with information on which pixels to display
+	"""
+	if interval is None:
+		interval = 1
 
-        while timer.get_runtime() <= duration:
-                timer.update()
+	if duration is None:
+		duration = 10
 
-def progressive_fill(color, interval=1, sel=PixelRange()):
+	on = True
+
+	def blink():
+		nonlocal on
+		show_fill(color if not on else COLORS["off"], sel)
+		on = not on
+
+	timer = RepeatingTimer(interval, blink)
+
+	while timer.get_runtime() <= duration:
+		timer.update()
+
+def progressive_fill(color, interval=None, duration=None, sel=PixelRange()):
 	"""
 	Takes a color and optional range arguments to fill the LED strip one at a time from either direction
 
 	Keyword arguments:
 	color -- An RGB int tuple defining the color to progressively fill the LED strip with
+	interval -- The interval of time between each light turning on
+	duration -- The duration of the effect, will calculate the interval of time based on leds
 	sel -- A container with information on which pixels to display
 	"""
 	leds_to_light = queue.Queue()
 
 	for i in sel.range():
 		leds_to_light.put(i)
+
+	# Duration mode wins precedence over interval mode
+	if duration is not None:
+		interval = duration / leds_to_light.qsize()
+
+	if interval is None and duration is None:
+		interval = 1
 
 	def prog_fill():
 		nonlocal leds_to_light
