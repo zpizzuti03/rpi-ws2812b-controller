@@ -11,6 +11,7 @@ import board
 import neopixel 
 from .config import PIN, LED_COUNT, DEFAULT_BRIGHTNESS
 from .colors import COLORS, is_rgb_tuple
+from .types import PixelRange
 
 pixels = neopixel.NeoPixel(PIN, LED_COUNT, brightness=DEFAULT_BRIGHTNESS)
 
@@ -35,16 +36,16 @@ def fill_single(color, index):
 	if is_rgb_tuple(color):
 		pixels[index] = color
 
-def fill_range(color, start=0, end=LED_COUNT):
+def fill_range(color, sel=PixelRange()):
 	"""
 	Fills LEDs in a range from a start value to end value
 
 	Keyword arguments:
 	color -- the color to fill the pixel with
-	start -- the starting pixel in range to fill
-	end -- the ending pixel to fill in this range
+	sel -- A container with information on which pixels to display
 	"""
-	for i in range(start, end):
+	for i in sel.range():
+		print(f"Filling index {i}")
 		fill_single(color, i)
 
 def set_brightness(val):

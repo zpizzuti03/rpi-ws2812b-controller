@@ -6,13 +6,14 @@ Animation layer for the LED controller system.
 This module defines time-based and pattern-based lighting effects
 that operate on the LED strip through the controller module.
 """
+import queue
 from .controller import fill_color, fill_single, fill_range, power_off, set_brightness, show_pixels
 from .colors import COLORS
 from .config import LED_COUNT
 from .timer import RepeatingTimer
+from .types import PixelRange
 
-
-def show_fill(color, start=0, end=LED_COUNT):
+def show_fill(color, sel=PixelRange()):
 	"""
 	Takes a user-specified color and fills the LED strip with it  
 
@@ -21,17 +22,16 @@ def show_fill(color, start=0, end=LED_COUNT):
 
 	Keyword arguments:
 	color -- An RGB int tuple defining the color to change the LED strip to
-	start -- the starting index of the fill area, defaults to the start 
-	end -- the ending index of the fill area, defaults to the end 
+	sel -- A container with information on which pixels to display
 	"""
-	if start != 0 or end != LED_COUNT:
-		fill_range(color, start, end)
+	if not sel.is_default():
+		fill_range(color, sel)
 	else:
 		fill_color(color)
 	show_pixels()
 
 
-def blink_color(color, interval, start=0, end=LED_COUNT):
+def blink_color(color, interval=1, duration=10, sel=PixelRange()):
         """
         Takes a color and a a interval to blink a specfic color over an interval of time
 
@@ -40,24 +40,41 @@ def blink_color(color, interval, start=0, end=LED_COUNT):
         and performs the blink and then this function alternates it's on state.
 
         Keyword arguments:
-        color -- the color to flash when the LED strip is on
+        color -- An RGB int tuple defining the color to blink on the LED strip
+	duration -- A time in seconds which the blinking affect will run for
         interval -- the time in seconds which the light switches from on to off and vice-versa
-        start -- 
-	end -- 
+        sel -- A container with information on which pixels to display
 	"""
         on = True
 
         def blink():
                 nonlocal on
-                show_fill(color if not on else COLORS["off"], start, end)
+                show_fill(color if not on else COLORS["off"], sel)
                 on = not on
 
         timer = RepeatingTimer(interval, blink)
 
-        while True:
+        while timer.get_runtime <= duration:
                 timer.update()
 
-def progressive_fill(color):
+def progressive_fill(color, interval=1, sel=PixelRange()):
 	"""
+	Takes a color and optional range arguments to fill the LED strip one at a time from either direction
+
+	Keyword arguments:
+	color -- An RGB int tuple defining the color to progressively fill the LED strip with
+	sel -- A container with information on which pixels to display
 	"""
-	
+	leds_to_light = queue.Queue()
+
+	for i in sel.range():
+		leds_to_light.put(i)
+
+	def prog_fill():
+		nonlocal leds_to_light
+		fill_single(color, leds_to_light.get())
+
+	timer = RepeatingTimer(interval, prog_fill)
+
+	while not leds_to_light.empty():
+		timer.update()

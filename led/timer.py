@@ -11,7 +11,8 @@ class RepeatingTimer:
 	This class defines the capabilities for a repeating timer which takes an action
 	and performs it at an interval
 	"""
-	next_update = time.monotonic()
+	start_time = time.monotonic()
+	next_update = start_time
 	interval = 1
 	action = None
 
@@ -37,12 +38,18 @@ class RepeatingTimer:
 
 	def set_interval(self, interval):
 		"""
-		Sets the interval  to repeat for an instance of this class
+		Sets the interval to repeat for an instance of this class
 
 		Keyword arguments:
 		interval -- the interval at which the timer will sleep before next action
 		"""
 		self.interval = interval
+
+	def get_runtime():
+		"""
+		Returns the current runtime of the timer object
+		"""
+		return time.monotonic - start_time
 
 	def update(self):
 		"""
