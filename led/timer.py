@@ -45,11 +45,11 @@ class RepeatingTimer:
 		"""
 		self.interval = interval
 
-	def get_runtime():
+	def get_runtime(self):
 		"""
 		Returns the current runtime of the timer object
 		"""
-		return time.monotonic - start_time
+		return time.monotonic() - self.start_time
 
 	def update(self):
 		"""

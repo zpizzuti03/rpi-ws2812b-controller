@@ -54,7 +54,7 @@ def blink_color(color, interval=1, duration=10, sel=PixelRange()):
 
         timer = RepeatingTimer(interval, blink)
 
-        while timer.get_runtime <= duration:
+        while timer.get_runtime() <= duration:
                 timer.update()
 
 def progressive_fill(color, interval=1, sel=PixelRange()):
