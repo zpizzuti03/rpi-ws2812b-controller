@@ -45,7 +45,6 @@ def fill_range(color, sel=PixelRange()):
 	sel -- A container with information on which pixels to display
 	"""
 	for i in sel.range():
-		print(f"Filling index {i}")
 		fill_single(color, i)
 
 def set_brightness(val):
