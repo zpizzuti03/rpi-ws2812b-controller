@@ -11,11 +11,10 @@ import board
 import neopixel 
 from .config import PIN, LED_COUNT, DEFAULT_BRIGHTNESS
 from .colors import COLORS, is_rgb_tuple
-from .types import PixelRange
 
 pixels = neopixel.NeoPixel(PIN, LED_COUNT, brightness=DEFAULT_BRIGHTNESS)
 
-def fill_color(color):
+def fill_color(color=COLORS["off"]):
 	"""
 	Fills the entire LED strip with a specified color
 
@@ -25,7 +24,7 @@ def fill_color(color):
 	if is_rgb_tuple(color):
 		pixels.fill(color)
 
-def fill_single(color, index):
+def fill_single(index, color=COLORS["off"]):
 	"""
 	Fills a single LED with a specified color by index
 
@@ -36,23 +35,23 @@ def fill_single(color, index):
 	if is_rgb_tuple(color):
 		pixels[index] = color
 
-def fill_range(color, sel=PixelRange()):
+def fill_range(color=COLORS["off"], length=range(0, LED_COUNT)):
 	"""
-	Fills LEDs in a range from a start value to end value
+	Fills LEDs in a range to a specified color
 
 	Keyword arguments:
-	color -- the color to fill the pixel with
-	sel -- A container with information on which pixels to display
+	color -- the color to fill the LED span with
+	length -- the range of pixels to fill
 	"""
-	for i in sel.range():
-		fill_single(color, i)
+	for i in length:
+		fill_single(index=i, color=color)
 
 def set_brightness(val):
 	"""
 	Sets the brightness of the entire LED strip
 
-	This function sets the brightness of the LEDs for the 
-	entire strip. Note: the ws2812b LED strip this function is 
+	This function sets the brightness of the LEDs for the
+	entire strip. Note: the ws2812b LED strip this function is
 	designed for does not support individual LED brightness.
 
 	Keyowrd arguments:
