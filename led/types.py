@@ -23,14 +23,14 @@ class PixelRange:
 	invert: bool = False		# A boolean defining whether to start lighting from the start or end of the strip
 
 	def __post_init__(self):
-		self.start = max(0, min(self.start, LED_COUNT))
-		self.end = max(0, min(self.end, LED_COUNT))
+		self.start = max(0, min(self.start, LED_COUNT)) if self.start is not None else 0
+		self.end = max(0, min(self.end, LED_COUNT)) if self.end is not None else LED_COUNT
 
 		range = self.end - self.start
 
-		self.span = max(1, min(self.span, range))
+		self.span = max(1, min(self.span, range)) if self.span is not None else 1
 
-		self.spacing = max(0, min(self.spacing, range - self.span))
+		self.spacing = max(0, min(self.spacing, range - self.span)) if self.spacing is not None else 0
 
 	def max_spacing(self) -> int:
 		"""

@@ -60,10 +60,10 @@ def fill_by_period(span_col=None, space_col=None, sel=None):
 
 def fill_pixels(span_col=None, space_col=None, sel=None):
 	"""
-	Decides which method to fill pixels with based on user input and selections
+	Takes a user-specified color and fills the LED strip with it 
 
-	This function determines whether it is most efficient to fill by
-	range, period, or all at once depending on the selecitons that the user has made.
+	Utilizes either fill_color if there is no specified range, or
+	fill_range i
 
 	Keyword arguments:
 	span_col -- An RGB int tuple defining the primary color to change the LED strip's span length to
@@ -80,13 +80,13 @@ def fill_pixels(span_col=None, space_col=None, sel=None):
 
 def apply_fill(span_col=None, space_col=None, sel=None):
 	"""
-	Wrapper function to apply filling to pixels with paramters that still must be verified
+	Wrapper function to apply filling to pixels with paramters that are unverified
 
 	span_col -- An RGB int tuple defining the primary color to change the LED strip's span length to
 	space_col -- An RGB int tuple defining the color of spacing (LEDs are OFF by default)
 	sel -- A container with information on which pixels to display
 	"""
-	span_col, space_col, sel = validate_selections(span_col=span_col, space_col=space_col, sel=sel)
+	span_col, space_col, sel = validate_selection(span_col=span_col, space_col=space_col, sel=sel)
 	fill_pixels(span_col=span_col, space_col=space_col, sel=sel)
 
 def blink_color(span_col_primary=None, span_col_secondary=None, space_col_primary=None, space_col_secondary=None, interval=None, duration=None, sel=None):
@@ -104,11 +104,11 @@ def blink_color(span_col_primary=None, span_col_secondary=None, space_col_primar
 	duration -- A time in seconds which the blinking affect will run for
 	sel -- A container with information on which pixels to display
 	"""
-	span_col_primary, space_col_primary, sel = validate_selections(span_col=span_col_primary, space_col=space_col_primary, sel=sel)
+	validate_selection(span_col=span_col_primary, space_col=space_col_primary, sel=sel)
 	if span_col_secondary is None:
 		span_col_secondary = OFF
 	if space_col_secondary is None:
-		space_col_secondary = OFF
+		space_col_secondary = space_col_primary
 	if interval is None:
 		interval = 1
 	if duration is None:
@@ -126,18 +126,20 @@ def blink_color(span_col_primary=None, span_col_secondary=None, space_col_primar
 	while timer.get_runtime() <= duration:
 		timer.update()
 
-def progressive_fill(span_col=None, space_col=None, interval=None, duration=None, sel=None):
+def progressive_fill(span_col=None, interval=None, duration=None, sel=None):
 	"""
 	Takes a color and optional range arguments to fill the LED strip one at a time from either direction
 
 	Keyword arguments:
 	span_col -- An RGB int tuple defining the color to progressively fill the LED strip's spans with
-	space_col -- An RGB int tuple defining the color of the spacing between each span
 	interval -- The interval of time between each light turning on
 	duration -- The duration of the effect, will calculate the interval of time based on leds
 	sel -- A container with information on which pixels to display
 	"""
-	span_col, space_col, sel = validate_selections(span_col=span_col, space_col=space_col, sel=sel)
+	if span_col is None:
+		span_col = OFF
+	if sel is None:
+		sel = PixelRange()
 
 	leds_to_light = queue.Queue()
 

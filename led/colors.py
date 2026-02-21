@@ -34,40 +34,51 @@ COLORS = {
 }
 
 
-def is_rgb_tuple(color):
+def is_valid_color(color) -> bool:
 	"""
-	Determines if a given color is a tuple of 3 int rgb values
+	Determines if a given color is a valid tuple of 3 int rgb values
 
 	Keyword arguments:
-	color -- the color to be verified
+	color -- the value to be verified as a color
 	"""
-	if type(color) is tuple:
+	if isinstance(color, tuple) and len(color) == 3 and all(isinstance(x, int) for x in color):
+		for x in color:
+			if x < 0 or x > 255:
+				return False
 		return True
 	else:
-		print("The color that was entered is not a valid RGB tuple)")
 		return False
 
 
-def resolve_color(rgb: list[int] | None, color: str | None) -> tuple[int, int, int]:
-        """
-        Takes an rgb value or string value and returns it as a tuple
+def resolve_color(color: str | list[int, int, int] | None) -> tuple[int, int, int]:
+	"""
+	Takes a list of input values and returns a vaild rgb tuple if within parameters
 
-        Takes either an rgb value as a list of 3 integers and returns a tuple
-        generated from the integers, or a string value, and checks if it is
-        contained in the list of defined colors and returns its key as a tuple. 
+	Takes a list of input values and parses them to determine if it is a string
+	contained in the COLORS dictionary and returns a tuple, OR if it is an RGB value, 
+	parses and verifies that it is valid and returns the tuple.
 
-        Keyword arguments:
-        rgb -- a list of three ints
-        color -- a string value representing a key in the color dictionary.
-        """
-        if rgb is not None:
-                return tuple(rgb)
+	Keyword arguments:
+	color -- a value representing a color through string or RGB.
+	"""
+	if color is not None:
+		if isinstance(color, list) and len(color) == 1 and isinstance(color[0], str):
+			# Check one string values
+			name = color[0].lower()
+			if name in COLORS:
+				return tuple(COLORS[name])
+			else:
+				raise ValueError(f"Unknown color '{name}'. See options: ('red', 'green', 'blue', 'white', 'yellow', 'magenta', 'cyan')")
+		elif isinstance(color, list) and len(color) == 3 and all(isinstance(x, str) for x in color):
+			# Check RGB values
+			try:
+				rgb_tuple = tuple(int(x) for x in color)
+			except(ValueError):
+				raise ValueError("RGB Values must be integers.")
 
-        if color is not None:
-                color = color.lower()
-                # Determine if the color is in the dictionary
-                if color in COLORS:
-                        return tuple(COLORS[color])
-                else:
-                        print("Error: Please use a valid color from the list: (r,g,b,w,y,c,m)" )
-        return (0, 0, 0)
+			if not is_valid_color(rgb_tuple):
+				raise ValueError("RGB Values must be between 0 and 255.")
+
+			return rgb_tuple
+	else:
+		raise ValueError(f"No color provided or Invalid color format: {color}")
