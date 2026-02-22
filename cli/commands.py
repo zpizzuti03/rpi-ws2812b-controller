@@ -1,21 +1,31 @@
 """
-main.py
+commands.py
 
-This module parses command line arguments into actions for the LED strip
+Command dispatcher for the LED control system.
+
+This module translates parsed CLI arguments into
+LED actions by calling effects and controller functions. 
 """
-import sys
-import argparse
-import string
 from led import effects
 from led.controller import power_off, set_brightness
 from led.colors import resolve_color
 from led.types import PixelRange
-from .parser import build_parser
 
-def main(argv=None):
-	parser = build_parser()
-	args = parser.parse_args(argv)
+def run_commands(args=None):
+	"""
+	Executes LED operations based on parsed command-line arguments
 
+	This function interprets passed argparse input and
+	executes the effect or function associated with the
+	command. This effectively serves as a user input 
+	command routing layer.
+
+	Keyowrd arguments:
+	args -- Parsed command line arguments. If None are provided, polled through sys.argv.
+
+	Returns:
+	int value representing exit status code (0 for success, non-zero for failiure)
+	"""
 	# --- POWER OFF ----
 
 	if args.off:
@@ -59,6 +69,7 @@ def main(argv=None):
 			spacing_color = resolve_color(args.spacing_color)
 		except ValueError as e:
 			print(f"[ERROR] [SPACING-PRIMARY-COL]: {e}")
+			return 1
 		print(f"Spacing color: {spacing_color}")
 	else:
 		spacing_color = None
@@ -68,6 +79,7 @@ def main(argv=None):
 			spacing_color_secondary = resolve_color(args.spacing_color_secondary)
 		except ValueError as e:
 			print(f"[ERROR] [SPACING-SECONDARY-COL]: {e}")
+			return 1
 		print(f"Spacing secondary color: {spacing_color_secondary}")
 	else:
 		spacing_color_secondary = None
@@ -122,7 +134,3 @@ def main(argv=None):
 		)
 
 	return 0
-
-
-if __name__ =="__main__":
-	sys.exit(main())

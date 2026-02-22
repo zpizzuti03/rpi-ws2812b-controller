@@ -4,7 +4,7 @@ controller.py
 Hardware abstraction layer for the LED strip
 
 This module maintains provides control over the NeoPixel LED hardware.
- and orchestrates the changing of pixels
+and orchestrates the changing of pixels
 Monitors and controls runtime state (i.e. current color, brightness, etc.) 
 """
 import board 
@@ -59,8 +59,6 @@ def set_brightness(val):
 	"""
 	if val >= 0 and val <= 1:
 	        pixels.brightness = val
-	else:
-		print("Please enter a brightness value between 0 and 1.")
 
 def show_pixels():
         """
