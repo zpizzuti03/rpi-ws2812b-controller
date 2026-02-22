@@ -35,4 +35,4 @@
 ## Running the Application
 - From the project root directory, execute the CLI module:
 
-```python3 -m cli.main -h```
+```python3 -m cli.__main__ -h```
