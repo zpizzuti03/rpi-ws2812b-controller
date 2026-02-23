@@ -5,6 +5,58 @@ This module defines types to unify data collection
 """
 from dataclasses import dataclass
 from .config import LED_COUNT
+from .colors import COLORS, OFF, is_valid_color
+
+
+@dataclass(slots=True)
+class ColorPalette:
+	"""
+	Represents a validated color palette to be applied to LEDs on the strip
+
+	This object:
+		- Stores data on the selection of colors for the LED display
+
+		- Validates all colors passed are valid else sets defaults
+		- Can return each color
+	"""
+	span_primary : tuple[int, int, int] = COLORS["red"]
+	span_secondary : tuple[int, int, int] = OFF
+	spacing_primary : tuple[int, int, int] = OFF
+	spacing_secondary : tuple[int, int, int] = OFF
+
+	def __post_init__(self):
+		"""
+		Performs validation on the values entered, and sets defaults if they are invalid
+		"""
+		self.span_primary = COLORS["red"] if not is_valid_color(self.span_primary) else self.span_primary
+		self.span_secondary = OFF if not is_valid_color(self.span_secondary) else self.span_secondary
+		self.spacing_primary = OFF if not is_valid_color(self.spacing_primary) else self.spacing_primary
+		self.spacing_secondary = OFF if not is_valid_color(self.spacing_secondary) else self.spacing_secondary
+
+	def get_span_primary(self):
+		"""
+		Returns the span's primary color
+		"""
+		return self.span_primary
+
+	def get_span_secondary(self):
+		"""
+		Returns the span's secondary color
+		"""
+		return self.span_secondary
+
+	def get_spacing_primary(self):
+		"""
+		Returns the spacing's primary color
+		"""
+		return self.spacing_primary
+
+	def get_spacing_secondary(self):
+		"""
+		Returns the spacing's secondary color
+		"""
+		return self.spacing_secondary
+
 
 @dataclass(slots=True)
 class PixelRange:

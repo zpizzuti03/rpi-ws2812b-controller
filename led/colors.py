@@ -33,6 +33,7 @@ COLORS = {
 	"off": (0, 0, 0),
 }
 
+OFF = COLORS["off"]
 
 def is_valid_color(color) -> bool:
 	"""
@@ -46,8 +47,7 @@ def is_valid_color(color) -> bool:
 			if x < 0 or x > 255:
 				return False
 		return True
-	else:
-		return False
+	return False
 
 
 def resolve_color(color: str | list[int, int, int] | None) -> tuple[int, int, int]:

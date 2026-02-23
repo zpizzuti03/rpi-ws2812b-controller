@@ -9,7 +9,7 @@ LED actions by calling effects and controller functions.
 from led import effects
 from led.controller import power_off, set_brightness
 from led.colors import resolve_color
-from led.types import PixelRange
+from led.types import ColorPalette, PixelRange
 
 def run_commands(args=None):
 	"""
@@ -84,6 +84,14 @@ def run_commands(args=None):
 	else:
 		spacing_color_secondary = None
 
+	# Construct the Color Palette
+	colors = ColorPalette(
+		span_primary=primary_color,
+		span_secondary=secondary_color,
+		spacing_primary=spacing_color,
+		spacing_secondary=spacing_color_secondary
+	)
+
 	# ---- OPTION ARGS ----
 
 	if args.brightness:
@@ -101,8 +109,7 @@ def run_commands(args=None):
 		elif args.interval is None and args.duration is None:
 			print("No --interval or --duration specified. Using default interval: 1 second.")
 		effects.progressive_fill( 
-			span_col=primary_color,
-			space_col=spacing_color,
+			palette=colors,
 			interval=args.interval,
 			duration=args.duration,
 			sel=selection
@@ -116,10 +123,7 @@ def run_commands(args=None):
 			print("No --duration provided. Using default duration of 10 seconds.")
 
 		effects.blink_color(
-			span_col_primary=primary_color,
-			span_col_secondary=secondary_color,
-			space_col_primary=spacing_color,
-			space_col_secondary=spacing_color_secondary,
+			palette=colors,
 			interval=args.interval,
 			duration=args.duration,
 			sel=selection
@@ -128,8 +132,7 @@ def run_commands(args=None):
 	if args.fill:
 		print("Filled")
 		effects.apply_fill(
-			span_col=primary_color,
-			space_col=spacing_color,
+			palette=colors,
 			sel=selection
 		)
 

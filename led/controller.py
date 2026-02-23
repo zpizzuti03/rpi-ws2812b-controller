@@ -21,8 +21,7 @@ def fill_color(color=COLORS["off"]):
 	Keyword arguments:
 	color -- the color to fill the LED strip with
 	"""
-	if is_valid_color(color):
-		pixels.fill(color)
+	pixels.fill(color)
 
 def fill_single(index, color=COLORS["off"]):
 	"""
@@ -32,8 +31,7 @@ def fill_single(index, color=COLORS["off"]):
 	color -- the color to fill the pixel with
 	index -- the index of the pixel on the LED strip (0-LED_COUNT)
 	"""
-	if is_valid_color(color):
-		pixels[index] = color
+	pixels[index] = color
 
 def fill_range(color=COLORS["off"], length=range(0, LED_COUNT)):
 	"""
