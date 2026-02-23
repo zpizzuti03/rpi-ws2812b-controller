@@ -28,7 +28,7 @@ class ColorPalette:
 		"""
 		Performs validation on the values entered, and sets defaults if they are invalid
 		"""
-		self.span_primary = COLORS["red"] if not is_valid_color(self.span_primary) else self.span_primary
+		self.span_primary = OFF if not is_valid_color(self.span_primary) else self.span_primary
 		self.span_secondary = OFF if not is_valid_color(self.span_secondary) else self.span_secondary
 		self.spacing_primary = OFF if not is_valid_color(self.spacing_primary) else self.spacing_primary
 		self.spacing_secondary = OFF if not is_valid_color(self.spacing_secondary) else self.spacing_secondary
