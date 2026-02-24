@@ -102,6 +102,10 @@ def run_commands(args=None):
 
 	# ---- EFFECT ARGS ----
 
+	if args.chase:
+		print("Chase")
+		
+
 	if args.progressive:
 		print("Progressive")
 		if args.interval is not None and args.duration is not None:

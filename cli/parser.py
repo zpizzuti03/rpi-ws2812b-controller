@@ -84,6 +84,13 @@ def build_parser():
 		help="Progressively fills the light strip's LEDs, over an interval or duration. Duration wins precedence over interval, for more see '--interval' or '--duration'. Usage: '--progressive'"
 	)
 
+	action_group.add_argument(
+		"-C",
+		"--chase",
+		action='store_true',
+		help="Creates a bar of span length to chase itself back and forth on the LED strip. Usage: '--chase'"
+	)
+
 	parser.add_argument(
 		"-s",
 		"--span",

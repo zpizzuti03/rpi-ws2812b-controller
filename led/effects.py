@@ -73,7 +73,7 @@ def apply_fill(palette=None, sel=None):
 
 def blink_color(palette=None, interval=None, duration=None, sel=None):
 	"""
-	Takes a color and a a interval to blink a specfic color over an interval of time
+	Takes a color palette and a a interval to blink a specfic color over an interval of time
 
 	This function takes the colors passed and uses a closure to encapsulate it into an
 	action that can be passed to the repeating timer's action function. The timer updates
@@ -106,7 +106,7 @@ def blink_color(palette=None, interval=None, duration=None, sel=None):
 
 def progressive_fill(palette=None, interval=None, duration=None, sel=None):
 	"""
-	Takes a color and optional range arguments to fill the LED strip one at a time from either direction
+	Takes a color palette and optional range arguments to fill the LED strip one at a time from either direction
 
 	Takes a color palette, and first applies secondary coloring to the LED strip with spacing and span.
 	Over an interval or duration specified, (with duration taking precedence) fills pixels accumulatively
@@ -143,3 +143,8 @@ def progressive_fill(palette=None, interval=None, duration=None, sel=None):
 
 	while not leds_to_light.empty():
 		timer.update()
+
+def chase_fill():
+	"""
+	
+	"""
