@@ -8,8 +8,9 @@ LED actions by calling effects and controller functions.
 """
 from led import effects
 from led.controller import power_off, set_brightness
-from led.colors import resolve_color
+from led.colors import resolve_color, OFF
 from led.types import ColorPalette, PixelRange
+from .exit_codes import ExitCode
 
 def run_commands(args=None):
 	"""
@@ -31,7 +32,7 @@ def run_commands(args=None):
 	if args.off:
 		print("Off")
 		power_off()
-		return 0
+		return ExitCode.SUCCESS
 
 	# Create a range object to store data
 	selection = PixelRange(
@@ -49,48 +50,52 @@ def run_commands(args=None):
 			primary_color = resolve_color(args.color)
 		except ValueError as e:
 			print(f"[ERROR] [PRIMARY-COL]: {e}")
-			return 1
+			return ExitCode.INVALID_INPUT
 		print(f"Primary color: {primary_color}")
 	else:
-		primary_color = None
+		primary_color = OFF
 
 	if args.secondary_color is not None:
 		try:
 			secondary_color = resolve_color(args.secondary_color)
 		except ValueError as e:
 			print(f"[ERROR] [SECONDARY-COL]: {e}")
-			return 1
+			return ExitCode.INVALID_INPUT
 		print(f"Secondary color: {secondary_color}")
 	else:
-		secondary_color = None
+		secondary_color = OFF
 
 	if args.spacing_color is not None:
 		try:
 			spacing_color = resolve_color(args.spacing_color)
 		except ValueError as e:
 			print(f"[ERROR] [SPACING-PRIMARY-COL]: {e}")
-			return 1
+			return ExitCode.INVALID_INPUT
 		print(f"Spacing color: {spacing_color}")
 	else:
-		spacing_color = None
+		spacing_color = OFF
 
 	if args.spacing_color_secondary:
 		try:
 			spacing_color_secondary = resolve_color(args.spacing_color_secondary)
 		except ValueError as e:
 			print(f"[ERROR] [SPACING-SECONDARY-COL]: {e}")
-			return 1
+			return ExitCode.INVALID_INPUT
 		print(f"Spacing secondary color: {spacing_color_secondary}")
 	else:
-		spacing_color_secondary = None
+		spacing_color_secondary = OFF
 
 	# Construct the Color Palette
-	colors = ColorPalette(
-		span_primary=primary_color,
-		span_secondary=secondary_color,
-		spacing_primary=spacing_color,
-		spacing_secondary=spacing_color_secondary
-	)
+	try:
+		colors = ColorPalette(
+			span_primary=primary_color,
+			span_secondary=secondary_color,
+			spacing_primary=spacing_color,
+			spacing_secondary=spacing_color_secondary
+		)
+	except ValueError as e:
+		print(f"[ERROR]: {e}")
+		return ExitCode.INVALID_INPUT
 
 	# ---- OPTION ARGS ----
 
@@ -140,4 +145,4 @@ def run_commands(args=None):
 			sel=selection
 		)
 
-	return 0
+	return ExitCode.SUCCESS

@@ -17,7 +17,7 @@ class ColorPalette:
 		- Validates all colors passed are valid else sets defaults
 		- Can return each color
 	"""
-	span_primary : tuple[int, int, int] = COLORS["red"]
+	span_primary : tuple[int, int, int] = OFF
 	span_secondary : tuple[int, int, int] = OFF
 	spacing_primary : tuple[int, int, int] = OFF
 	spacing_secondary : tuple[int, int, int] = OFF
@@ -26,10 +26,10 @@ class ColorPalette:
 		"""
 		Performs validation on the values entered, and sets defaults if they are invalid
 		"""
-		self.span_primary = OFF if not is_valid_color(self.span_primary) else self.span_primary
-		self.span_secondary = OFF if not is_valid_color(self.span_secondary) else self.span_secondary
-		self.spacing_primary = OFF if not is_valid_color(self.spacing_primary) else self.spacing_primary
-		self.spacing_secondary = OFF if not is_valid_color(self.spacing_secondary) else self.spacing_secondary
+		self.validate_color("Span-Primary", self.span_primary)
+		self.validate_color("Span-Secondary", self.span_secondary)
+		self.validate_color("Spacing-Primary", self.spacing_primary)
+		self.validate_color("Spacing-Secondary", self.spacing_secondary)
 
 	def get_span_primary(self) -> tuple[int, int, int]:
 		"""
@@ -55,6 +55,11 @@ class ColorPalette:
 		"""
 		return self.spacing_secondary
 
+	@staticmethod
+	def validate_color(name: str, color: tuple[int, int, int]):
+		if not is_valid_color(color):
+			raise ValueError(f"Invalid color for {name}: {color}")
+
 
 @dataclass(slots=True)
 class PixelRange:
@@ -75,7 +80,7 @@ class PixelRange:
 	def __post_init__(self):
 
 		self.start = max(0, min(self.start, LED_COUNT)) if self.start is not None else 0
-		self.end = max(0, min(self.end, LED_COUNT)) if self.end is not None else LED_COUNT
+		self.end = max(1, min(self.end, LED_COUNT)) if self.end is not None else LED_COUNT
 
 		range = self.end - self.start
 
@@ -113,11 +118,29 @@ class PixelRange:
 			return space_col
 		return span_col
 
+	def get_start(self) -> int:
+		"""
+		Returns the value of the range's start
+		"""
+		return self.start
+
+	def get_end(self) -> int:
+		"""
+		Returns the value of the range's end
+		"""
+		return self.end
+
 	def get_span(self) -> int:
 		"""
 		Returns the value of the range's span
 		"""
 		return self.span
+
+	def is_inverted(self) -> bool:
+		"""
+		Returns true if the range is inverted or false if not
+		"""
+		return self.invert
 
 	def get_spacing(self) -> int:
 		"""
@@ -136,7 +159,7 @@ class PixelRange:
 		Returns the maximum spacing a user is allowed to use on a given PixelRange
 		"""
 		length = self.end - self.start
-		return max(0, range - self.span)# User cannot make spacing greater than the remaining space
+		return max(0, range - self.span) # User cannot make spacing greater than the remaining space
 
 	def has_spacing(self) -> bool:
 		"""

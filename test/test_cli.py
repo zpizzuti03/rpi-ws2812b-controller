@@ -8,15 +8,17 @@ for the main entry point.
 """
 import pytest
 from cli.__main__ import main
+from cli.exit_codes import ExitCode
 
 @pytest.mark.parametrize("flags", [
+	(["--off"]),
 	(["--color", "g"]),
 	(["--secondary-color", "g"]),
 	(["--spacing-color", "g"]),
 	(["--spacing-color-secondary", "g"])
 ])
-def test_cli_color_options(flags):
+def test_cli_color_options_return_success(flags):
 	"""
 	Tests that all color flags return successful when provided a valid value
 	"""
-	assert main(flags) == 0
+	assert main(flags) == ExitCode.SUCCESS
