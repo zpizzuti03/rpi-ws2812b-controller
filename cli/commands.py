@@ -102,11 +102,11 @@ def run_commands(args=None):
 
 	if args.interval is not None and args.interval <= 0:
 		print(f"Interval {args.interval} is invalid, interval must be greater than 0 seconds")
-		return INVALID_INPUT
+		return ExitCode.INVALID_INPUT
 
 	if args.duration is not None and args.duration <= 0:
 		print(f"Duration {args.duration} is invalid, duration must be greater than 0 seconds")
-		return INVALID_INPUT
+		return ExitCode.INVALID_INPUT
 
 	if args.brightness is not None:
 		if(args.brightness >= 0 and args.brightness <= 1):

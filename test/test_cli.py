@@ -22,3 +22,16 @@ def test_cli_color_options_return_success(flags):
 	Tests that all color flags return successful when provided a valid value
 	"""
 	assert main(flags) == ExitCode.SUCCESS
+
+
+@pytest.mark.parametrize("flags", [
+	(["--interval", "0"]),
+	(["--duration", "0"]),
+	(["--interval", "-1"]),
+	(["--duration", "-1"])
+])
+def test_cli_invalid_time_return_invalid(flags):
+	"""
+	Tests that invalid times for interval or duration will return invalid input
+	"""
+	assert main(flags) == ExitCode.INVALID_INPUT
