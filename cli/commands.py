@@ -109,7 +109,7 @@ def run_commands(args=None):
 
 	if args.chase:
 		print("Chase")
-		
+		effects.chase_fill()
 
 	if args.progressive:
 		print("Progressive")

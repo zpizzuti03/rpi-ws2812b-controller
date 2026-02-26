@@ -17,6 +17,7 @@ def validate_selections(palette, sel):
 	"""
 	Validates the color palette and selection, assigning defaults if they are None
 
+	Keyword arguments:
 	palette -- A container holding color reltated information for LED pixels
 	sel -- A container with information on which pixels to display
 	"""
@@ -65,6 +66,7 @@ def apply_fill(palette=None, sel=None):
 	"""
 	Wrapper function to apply filling to pixels with paramters that still must be verified
 
+	Keyword arguments:
 	palette -- A container holding color reltated information for LED pixels
 	sel -- A container with information on which pixels to display
 	"""
@@ -147,4 +149,12 @@ def progressive_fill(palette=None, interval=None, duration=None, sel=None):
 def chase_fill():
 	"""
 	
+
+	Keyword arguments:
+	palette -- A container holding color reltated information for LED pixels
+	interval -- The interval of time between each light turning on
+	duration -- The duration of the effect, will calculate the interval of time based on leds
+	sel -- A container with information on which pixels to display
 	"""
+	raise NotImplementedError("Chase fill is not implemented.")
+
