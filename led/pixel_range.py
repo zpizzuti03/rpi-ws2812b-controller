@@ -1,7 +1,10 @@
 """
 types.py
 
-This module defines types to unify data collection
+This module defines the PixelRange data abstraction
+
+PixelRange is a dataclass which holds the information on which 
+arrangement of pixels to display on the LED strip, and how to arrange them
 """
 from dataclasses import dataclass
 from .config import LED_COUNT
@@ -9,12 +12,12 @@ from .config import LED_COUNT
 @dataclass(slots=True)
 class PixelRange:
 	"""
-	Represents a validated selection of LEDs on the strip
+	Represents a validated selection of LEDs on the strip.
 
 	This object:
 		- Stores the data on a selection of LEDs from the display
 		- Validates the start, end, span, and spacing input values by clamping
-		- Can return it's range based on inversion.
+		- Can provide information on the arrangement of pixels (e.g. range, color of a specific pixel, if an index is in the span)
 	"""
 	start: int = 0			# The start boundary of the range to be filled
 	end: int = LED_COUNT		# The end boundary of the range to be filled

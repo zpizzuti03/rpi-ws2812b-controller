@@ -1,7 +1,8 @@
 """
-types.py
+color_palette.py
 
-This module defines types to unify data collection
+This module defines a color palette class which stores the
+colors to apply to the LED strips.
 """
 from dataclasses import dataclass
 from .colors import COLORS, OFF, is_valid_color
@@ -13,6 +14,7 @@ class ColorPalette:
 
 	This object:
 		- Stores data on the selection of colors for the LED display
+		- Holds four colors, a primary and secondary for the span of the led strip, and the spacing between
 		- Validates all colors passed are valid else sets defaults
 		- Can return each color
 	"""

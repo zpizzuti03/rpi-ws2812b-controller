@@ -1,8 +1,10 @@
 """
-test_types
+test_pixel_range.py
 
 This module verifies that default values apply
-correctly to types and that their functions return expected results
+correctly to the PixelRange dataclass and that
+it's functions return expected results when given
+specific parameters.
 """
 import pytest
 from led.pixel_range import PixelRange

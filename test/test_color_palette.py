@@ -1,8 +1,9 @@
 """
-test_types
+test_color_palette.py
 
 This module verifies that default values apply
-correctly to types and that their functions return expected results
+correctly to the ColorPalette dataclass and that invalid
+values are rejected
 """
 import pytest
 from led.color_palette import ColorPalette

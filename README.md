@@ -28,7 +28,7 @@
 - This project's default is the rpi5 GPIO 18 pin.
 ```PIN = board.D18```
 
-### Set the default amount of lights to be the amount of lights on the LED strip.
+### Set the default amount of lights to be the amount of lights on your physical LED strip.
 - This project's default is a strip of length 60.
 ```LED_COUNT = 60```
 
@@ -36,3 +36,6 @@
 - From the project root directory, execute the CLI module:
 
 ```python3 -m cli.__main__ -h```
+
+### To run the testing code, you will also need to install pytest in your Virtual Environment:
+```pip install -U pytest```
