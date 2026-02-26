@@ -11,7 +11,8 @@ import queue
 from .controller import fill_color, fill_single, fill_range, power_off, set_brightness, show_pixels
 from .colors import OFF
 from .timer import RepeatingTimer
-from .types import ColorPalette, PixelRange
+from .color_palette import ColorPalette
+from .pixel_range import PixelRange
 
 def validate_selections(palette, sel):
 	"""

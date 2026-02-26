@@ -5,43 +5,13 @@ This module verifies that default values apply
 correctly to types and that their functions return expected results
 """
 import pytest
-from led.types import PixelRange, ColorPalette
-from led.colors import COLORS, OFF
+from led.pixel_range import PixelRange
 from led.config import LED_COUNT
 
 MIN_RANGE = 0
 MAX_RANGE = LED_COUNT
 RANGE_TOO_LOW = -1
 RANGE_TOO_HIGH = MAX_RANGE + 1
-
-# ----- Color Palette -----
-
-@pytest.mark.parametrize("function", [
-	"get_span_primary",
-	"get_span_secondary",
-	"get_space_primary",
-	"get_space_secondary"
-])
-def test_default_color_palette(function):
-	"""
-	Tests that a default ColorPalette object returns the expected values
-	"""
-	p = ColorPalette()
-
-	assert getattr(p, function)() == OFF
-
-@pytest.mark.parametrize("field, value", [
-	("span_primary", "invalid"),
-	("span_secondary", "invalid"),
-	("spacing_primary", "invalid"),
-	("spacing_secondary", "invalid")
-])
-def test_color_palette_invalid_colors(field, value):
-	"""
-	Tests that a palette with invalid colors will throw errors
-	"""
-	with pytest.raises(ValueError):
-		ColorPalette(**{field: value})
 
 # ----- Pixel Range -----
 
@@ -107,7 +77,7 @@ def test_pixel_range_inversion(start, end):
 	(7, True),
 	(8, False)
 ])
-def test_pixel_range_is_in_span(index, expected):
+def test_pixel_range_in_span(index, expected):
 	"""
 	Test values in a range and verify if they are in the span.
 
@@ -118,23 +88,37 @@ def test_pixel_range_is_in_span(index, expected):
 
 	assert r.is_in_span(index) == expected
 
-@pytest.mark.parametrize("", [
-	(),
+@pytest.mark.parametrize("start, end, span, expected", [
+	(MIN_RANGE, MAX_RANGE, MAX_RANGE, True),
+	(MIN_RANGE, MAX_RANGE, RANGE_TOO_HIGH, False),
+	(10, 20, 10, True),
+	(10, 20, 11, False),
+	(10, 20, -1, False)
 ])
-def test_pixel_range_invalid_span():
-	
+def test_pixel_range_invalid_span(start, end, span, expected):
+	"""
+	Tests whether or not a span entered is valid or is clamped due to being out of range
+	"""
+	r = PixelRange(start=start, end=end, span=span)
 
+	has_original_span = r.get_span() == span
 
-@pytest.mark.parametrize("start, end, original", [
-	(MIN_RANGE, MAX_RANGE, 1),
-	(20, 40, 1),
-	(48, 59, 1),
+	assert has_original_span == expected
+
+@pytest.mark.parametrize("start, end, span, spacing, expected", [
+	(MIN_RANGE, MAX_RANGE, 2, 2, True),
+	(MIN_RANGE, MAX_RANGE, MAX_RANGE, 1, False),
+	(2, 5, 3, 1, False),
+	(2, 6, 3, 1, True),
+	(20, 40, 19, 1, True),
+	(48, 60, 12, 1, False),
 ])
-def test_pixel_range_invalid_spacing(start, end, original):
+def test_pixel_range_valid_spacing(start, end, span, spacing, expected):
 	"""
 	Tests invalid spacing arguments and ensures they are properly clamped in relation to span
 	"""
-	r = PixelRange(start=start, end=end, span=MAX_RANGE, spacing=original)
+	r = PixelRange(start=start, end=end, span=span, spacing=spacing)
 
+	has_original_spacing = r.get_spacing() == spacing
 
-	assert r.get_spacing != original
+	assert has_original_spacing == expected

@@ -9,7 +9,8 @@ LED actions by calling effects and controller functions.
 from led import effects
 from led.controller import power_off, set_brightness
 from led.colors import resolve_color, OFF
-from led.types import ColorPalette, PixelRange
+from led.color_palette import ColorPalette
+from led.pixel_range import PixelRange
 from .exit_codes import ExitCode
 
 def run_commands(args=None):
