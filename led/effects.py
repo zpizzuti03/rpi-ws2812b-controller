@@ -146,7 +146,7 @@ def progressive_fill(palette=None, interval=None, duration=None, sel=None):
 	while not leds_to_light.empty():
 		timer.update()
 
-def chase_fill():
+def chase_fill(palette=None, interval=None, duration=None, sel=None):
 	"""
 	
 
@@ -156,5 +156,6 @@ def chase_fill():
 	duration -- The duration of the effect, will calculate the interval of time based on leds
 	sel -- A container with information on which pixels to display
 	"""
-	raise NotImplementedError("Chase fill is not implemented.")
+	palette, sel = validate_selections(palette=palette, sel=sel)
 
+	raise NotImplementedError("Chase fill is not implemented.")

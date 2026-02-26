@@ -24,6 +24,8 @@ class RepeatingTimer:
 		interval -- the interval over which to repeat a function
 		action -- the function of the action to be repeated over an interval
 		"""
+		if interval <= 0:
+			raise ValueError("Timer interval must be a time greater than 0 seconds")
 		self.interval = interval
 		self.action = action
 

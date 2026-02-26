@@ -12,7 +12,7 @@ def main(argv=None):
 	The main entry point
 
 	Keyword arguments:
-	argv -- 
+	argv -- The arguments to be parsed and run as commands
 	"""
 	parser = build_parser()
 	args = parser.parse_args(argv)

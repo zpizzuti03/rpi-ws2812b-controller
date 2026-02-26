@@ -75,7 +75,7 @@ def run_commands(args=None):
 	else:
 		spacing_color = OFF
 
-	if args.spacing_color_secondary:
+	if args.spacing_color_secondary is not None:
 		try:
 			spacing_color_secondary = resolve_color(args.spacing_color_secondary)
 		except ValueError as e:
@@ -99,7 +99,15 @@ def run_commands(args=None):
 
 	# ---- OPTION ARGS ----
 
-	if args.brightness:
+	if args.interval is not None and args.interval <= 0:
+		print(f"Interval {args.interval} is invalid, interval must be greater than 0 seconds")
+		return INVALID_INPUT
+
+	if args.duration is not None and args.duration <= 0:
+		print(f"Duration {args.duration} is invalid, duration must be greater than 0 seconds")
+		return INVALID_INPUT
+
+	if args.brightness is not None:
 		if(args.brightness >= 0 and args.brightness <= 1):
 			set_brightness(args.brightness)
 		else:
@@ -109,7 +117,12 @@ def run_commands(args=None):
 
 	if args.chase:
 		print("Chase")
-		effects.chase_fill()
+		effects.chase_fill(
+			palette=colors,
+			interval=args.interval,
+			duration=args.duration,
+			sel=selection
+		)
 
 	if args.progressive:
 		print("Progressive")
