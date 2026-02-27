@@ -33,15 +33,33 @@ def test_default_pixel_range(function, expected):
 
 	assert getattr(r, function)() == expected
 
+@pytest.mark.parametrize("property", [
+	("start"),
+	("end"),
+	("span"),
+	("spacing"),
+	("invert")
+])
+def test_pixel_range_invalid_type_entered(property):
+	"""
+	Tests that invalid input throws a TypeError exception
+	"""
+	r = PixelRange()
+
+	setter = getattr(r, f"set_{property}")
+
+	with pytest.raises(TypeError):
+		setter("a")
+
 @pytest.mark.parametrize("field, original, expected", [
 	("start", RANGE_TOO_LOW, MIN_RANGE),
 	("start", RANGE_TOO_HIGH, MAX_RANGE),
 	("end", RANGE_TOO_LOW, MIN_RANGE + 1),
 	("end", RANGE_TOO_HIGH, MAX_RANGE),
 ])
-def test_pixel_range_invalid_ranges(field, original, expected):
+def test_pixel_range_range_clamp(field, original, expected):
 	"""
-	Tests that invalid PixelRange args are processed properly
+	Tests that out of bounds PixelRange args are processed properly
 	"""
 	r = PixelRange(**{field: original})
 
@@ -67,8 +85,8 @@ def test_pixel_range_inversion(start, end):
 	original = range(start, end)
 	expected = range(end - 1, start - 1, -1)
 
-	assert r.get_length() == expected
-	assert r.get_length() != original
+	assert r.get_range() == expected
+	assert r.get_range() != original
 
 @pytest.mark.parametrize("index, expected", [
 	(0, True),
@@ -97,9 +115,9 @@ def test_pixel_range_in_span(index, expected):
 	(10, 20, 11, False),
 	(10, 20, -1, False)
 ])
-def test_pixel_range_invalid_span(start, end, span, expected):
+def test_pixel_range_span_clamp(start, end, span, expected):
 	"""
-	Tests whether or not a span entered is valid or is clamped due to being out of range
+	Tests whether or not a span entered is clamped due to being out of range
 	"""
 	r = PixelRange(start=start, end=end, span=span)
 
@@ -115,7 +133,7 @@ def test_pixel_range_invalid_span(start, end, span, expected):
 	(20, 40, 19, 1, True),
 	(48, 60, 12, 1, False),
 ])
-def test_pixel_range_valid_spacing(start, end, span, spacing, expected):
+def test_pixel_range_spacing_is_clamped(start, end, span, spacing, expected):
 	"""
 	Tests invalid spacing arguments and ensures they are properly clamped in relation to span
 	"""

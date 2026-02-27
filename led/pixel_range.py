@@ -27,15 +27,15 @@ class PixelRange:
 
 	def __post_init__(self):
 
-		self.start = max(0, min(self.start, LED_COUNT)) if self.start is not None else 0
-		self.end = max(1, min(self.end, LED_COUNT)) if self.end is not None else LED_COUNT
+		self.set_start(self.start)
+		self.set_end(self.end)
 
-		range = self.end - self.start
+		self.set_span(self.span)
+		self.set_spacing(self.spacing)
 
-		self.span = max(1, min(self.span, range)) if self.span is not None else 1
-		self.spacing = max(0, min(self.spacing, range - self.span)) if self.spacing is not None else 0
+		self.set_invert(self.invert)
 
-	def get_length(self):
+	def get_range(self):
 		"""
 		Returns the range which pixels will be lit up in based on inversion
 		"""
@@ -72,11 +72,29 @@ class PixelRange:
 		"""
 		return self.start
 
+	def set_start(self, value: int) -> None:
+		"""
+		Sets or clamps the start value of the range to the value provided after validation
+		"""
+		if value is None:
+			self.start = 0
+		elif self.ensure_int(value, "start"):
+			self.start = max(0, min(value, LED_COUNT))
+
 	def get_end(self) -> int:
 		"""
 		Returns the value of the range's end
 		"""
 		return self.end
+
+	def set_end(self, value: int) -> None:
+		"""
+		Sets or clamps the end value of the range to the value provided after validation
+		"""
+		if value is None:
+			self.end = LED_COUNT
+		elif self.ensure_int(value, "end"):
+			self.end = max(1, min(value, LED_COUNT))
 
 	def get_span(self) -> int:
 		"""
@@ -84,11 +102,29 @@ class PixelRange:
 		"""
 		return self.span
 
+	def set_span(self, value: int) -> None:
+		"""
+		Sets or clamps the span value of the range to the value provided after validation
+		"""
+		if value is None:
+			self.span = 1
+		elif self.ensure_int(value, "span"):
+			self.span = max(1, min(value, self.get_length()))
+
 	def is_inverted(self) -> bool:
 		"""
 		Returns true if the range is inverted or false if not
 		"""
 		return self.invert
+
+	def set_invert(self, value: bool) -> None:
+		"""
+		Sets the inversion value as long as it is a boolean type
+		"""
+
+		if not isinstance(value, bool):
+			raise TypeError(f"Value {value} provided for set_invert is not of type boolean")
+		self.invert = value
 
 	def get_spacing(self) -> int:
 		"""
@@ -96,11 +132,27 @@ class PixelRange:
 		"""
 		return self.spacing
 
+	def set_spacing(self, value: int) -> None:
+		"""
+		Sets or clamps the spacing value of the range to the value provided after validation
+		"""
+		if value is None:
+			self.spacing = 0
+		elif self.ensure_int(value, "spacing"):
+			self.spacing = max(0, min(value, self.get_length() - self.span))
+
+
 	def get_period(self) -> int:
 		"""
 		Returns the length of one period (the length of one span and one unit of spacing)
 		"""
 		return self.get_span() + self.get_spacing()
+
+	def get_length(self) -> int:
+		"""
+		Returns the integer length of the range
+		"""
+		return self.end - self.start
 
 	def max_spacing(self) -> int:
 		"""
@@ -122,5 +174,15 @@ class PixelRange:
 		Returns true if is the same as the sentinel instance.
 		"""
 		return obj == _DEFAULT_RANGE_
+
+	def ensure_int(self, value, function_name) -> bool:
+		"""
+		This function takes a value and verifies that it is an integer
+
+		Returns true if value is an integer or raises a TypeError
+		"""
+		if not isinstance(value, int):
+			raise TypeError(f"Value provided {value} for set_{function_name} is not of type integer.")
+		return True
 
 _DEFAULT_RANGE_ = PixelRange()	# Sentinel Value for checking state
