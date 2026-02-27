@@ -37,7 +37,7 @@ def fill_by_period(span_col=None, space_col=None, sel=None):
 	space_col -- The color to fill in spacing with. If none is provided, spacing is skipped
 	sel -- A container with information on which pixels to display
 	"""
-	for i in sel.get_length():
+	for i in sel.get_range():
 		col = sel.get_index_col(index=i, span_col=span_col, space_col=space_col)
 
 		if col is not None:
@@ -58,7 +58,7 @@ def fill_pixels(span_col=None, space_col=None, sel=None):
 	if sel.has_spacing():
 		fill_by_period(span_col=span_col, space_col=space_col, sel=sel)
 	elif not sel.is_default():
-		fill_range(color=span_col, length=sel.get_length())
+		fill_range(color=span_col, length=sel.get_range())
 	else:
 		fill_color(color=span_col)
 	show_pixels()
@@ -125,8 +125,11 @@ def progressive_fill(palette=None, interval=None, duration=None, sel=None):
 
 	leds_to_light = queue.Queue()
 
-	for i in sel.get_length():
-		leds_to_light.put(i)
+	for i in sel.get_range():
+		col = sel.get_index_col(index=i, span_col=palette.get_span_primary(), space_col=palette.get_space_primary())
+
+		if col is not OFF:
+			leds_to_light.put(i)
 
 	if duration is not None:				# Duration mode wins precedence over interval mode
 		interval = duration / leds_to_light.qsize()

@@ -47,8 +47,8 @@ class RepeatingTimer:
 		Keyword arguments:
 		interval -- the interval at which the timer will sleep before next action
 		"""
-		if not isinstance(interval, int):
-			raise TypeError(f"Timer interval must be of type integer, got {type(interval).__name__}")
+		if not isinstance(interval, float) and not isinstance(interval, int):
+			raise TypeError(f"Timer interval must be of type integer or float, got {type(interval).__name__}")
 		if interval <= 0:
 			raise ValueError(f"Timer interval must be a time greater than 0 seconds")
 		self.interval = interval

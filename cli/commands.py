@@ -36,13 +36,17 @@ def run_commands(args=None):
 		return ExitCode.SUCCESS
 
 	# Create a range object to store data
-	selection = PixelRange(
-		start=args.range[0] if args.range else None,
-		end=args.range[1] if args.range else None,
-		span=args.span if args.span else None,
-		spacing=args.spacing if args.spacing else None,
-		invert=args.invert
-	)
+	try:
+		selection = PixelRange(
+			start=args.range[0] if args.range else None,
+			end=args.range[1] if args.range else None,
+			span=args.span if args.span else None,
+			spacing=args.spacing if args.spacing else None,
+			invert=args.invert
+		)
+	except TypeError as e:
+		print(f"[ERROR] {e}")
+		return ExitCode.INVALUD_INPUT
 
 	# ---- COLOR ARGS ----
 
